@@ -1,0 +1,79 @@
+[
+  {
+    "id": "D001",
+    "nombre": "Dr. Carlos Méndez",
+    "especialidad": "Cardiología",
+    "horarioInicio": "09:00",
+    "horarioFin": "17:00",
+    "diasDisponibles": [
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes"
+    ]
+  },
+  {
+    "id": "D002",
+    "nombre": "Dra. Sofia Garibay",
+    "especialidad": "General",
+    "horarioInicio": "11:00",
+    "horarioFin": "23:00",
+    "diasDisponibles": [
+      "Martes",
+      "Miércoles",
+      "Jueves"
+    ]
+  },
+  {
+    "id": "D003",
+    "nombre": "Dra. Elia Flores",
+    "especialidad": "Traumatologia",
+    "horarioInicio": "7:00",
+    "horarioFin": "15:00",
+    "diasDisponibles": [
+      "Lunes",
+      "Martes",
+      "Jueves",
+      "Viernes"
+    ]
+  },
+  {
+    "id": "D004",
+    "nombre": "Dra. Avrill Morales",
+    "especialidad": "Pediatria",
+    "horarioInicio": "08:00",
+    "horarioFin": "16:00",
+    "diasDisponibles": [
+      "Lunes",
+      "Jueves",
+      "Viernes"
+    ]
+  },
+  {
+    "id": "D005",
+    "nombre": "Dra. Adriana Reyes",
+    "especialidad": "Pediatria",
+    "horarioInicio": "08:00",
+    "horarioFin": "16:00",
+    "diasDisponibles": [
+      "Lunes",
+      "Jueves",
+      "Viernes",
+      "Domingo"
+    ]
+  },
+  {
+    "id": "D006",
+    "nombre": "Dra. Zareth Villa",
+    "especialidad": "Psicologia",
+    "horarioInicio": "05:00",
+    "horarioFin": "16:00",
+    "diasDisponibles": [
+      "Lunes",
+      "Jueves",
+      "Viernes",
+      "Domingo"
+    ]
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "P001",
+    "nombre": "María González",
+    "edad": 35,
+    "telefono": "555-0101",
+    "email": "maria.g@email.com",
+    "fechaRegistro": "2025-01-15"
+  },
+  {
+    "id": "P002",
+    "nombre": "Pedro Ramírez",
+    "edad": 27,
+    "telefono": "555-4490",
+    "email": "pedro.rg@email.com",
+    "fechaRegistro": "2025-02-19"
+  },
+  {
+    "id": "P003",
+    "nombre": "Monica Velasco",
+    "edad": 19,
+    "telefono": "555-0009",
+    "email": "monica.vg@email.com",
+    "fechaRegistro": "2025-03-01"
+  },
+  {
+    "id": "P004",
+    "nombre": "Silvia Romero",
+    "edad": 50,
+    "telefono": "555-5509",
+    "email": "silvia.vg@email.com",
+    "fechaRegistro": "2025-11-08"
+  },
+  {
+    "id": "P005",
+    "nombre": "Ariell Ramírez",
+    "edad": 27,
+    "telefono": "555-4490",
+    "email": "pedro.rg@email.com",
+    "fechaRegistro": "2025-11-08"
+  }
+]
