@@ -127,7 +127,7 @@ const buscarDoctoresPorEspecialidad = (especialidad) =>{
 const isDuplicatedDoctor = (nombre, especialidad) => {
     const db = leerDB(DOCTORES_FILE);
     const existing = db.find(d => d.nombre === nombre && d.especialidad === especialidad);
-    return !existing;
+    return existing;
 }
 
 /// Funciones de Citas ///////
@@ -228,32 +228,30 @@ const buscarCitasPorFechaYEstado = (fecha, estado) => {
 };
 
 const buscarDoctoresDisponibles = (fecha, hora) => {
-  const dbDoctores = leerDB(DOCTORES_FILE);
-  const dbCitas = leerDB(CITAS_FILE);
-  const diaSemana = obtenerDiaDeLaSemana(fecha);
+    const db = leerDB(DOCTORES_FILE);
+    const diaBuscado = obtenerDiaDeLaSemana(fecha);
+    
+    return db.filter(doctor => {
+        // Verificar que el día esté en diasDisponibles
+        const diaDisponible = doctor.diasDisponibles.some(dia => 
+            dia.trim().toLowerCase() === diaBuscado.trim().toLowerCase()
+        );
+        
+        if (!diaDisponible) return false;
+        
+        // Verificar que la hora esté dentro del horario
+        const [horaInicio, minInicio] = doctor.horarioInicio.split(':').map(Number);
+        const [horaFin, minFin] = doctor.horarioFin.split(':').map(Number);
+        const [horaBuscada, minBuscada] = hora.split(':').map(Number);
+        
+        const inicioEnMinutos = horaInicio * 60 + minInicio;
+        const finEnMinutos = horaFin * 60 + minFin;
+        const buscadaEnMinutos = horaBuscada * 60 + minBuscada;
+        
+        return buscadaEnMinutos >= inicioEnMinutos && buscadaEnMinutos < finEnMinutos;
+    });
+}
 
-  return dbDoctores.filter(doctor => {
-    // Validar día disponible
-    if (!doctor.diasDisponibles.includes(diaSemana)) {
-      return false;
-    }
-
-    // Validar horario disponible
-    if (hora < doctor.horarioInicio || hora > doctor.horarioFin) {
-      return false;
-    }
-
-    // Validar que no haya cita en ese horario
-    const citasEnEseDia = dbCitas.filter(cita =>
-      cita.doctorId === doctor.id &&
-      cita.fecha === fecha &&
-      cita.hora === hora &&
-      cita.estado === 'programada'
-    );
-
-    return citasEnEseDia.length === 0;
-  });
-};
 
 const citasProximas24Horas = () => {
   const dbCitas = leerDB(CITAS_FILE);

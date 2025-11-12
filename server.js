@@ -117,7 +117,7 @@ app.post('/api/doctores', (req, res) =>{
             success: false,
             message: 'Faltan datos obligatorios'})
     }
-    if(!isDuplicatedDoctor){
+    if(isDuplicatedDoctor(nombre, especialidad)){
         return  res.status(400).json({
             success: false,
             message: 'Este doctor ya está registrado en la misma especialidad, ingresa otro'})
@@ -326,18 +326,32 @@ app.get('/api/estadisticas/especialidades', (req, res) =>{
 //   });
 // });
 
-app.get('/api/busqueda/doctores/disponibles', (req, res) =>{
-    const {fecha, hora} = req.query 
-    console.log('Consulta de disponibilidad:', { fecha, hora });
-
-
-    const doctores = buscarDoctoresDisponibles(fecha, hora)
+app.get('/api/buscar/doctores/disponibles', (req, res) => {
+    let { fecha, hora } = req.query;
+    
+    // Si no envían fecha, usar la fecha actual
+    if (!fecha) {
+        const hoy = new Date();
+        fecha = hoy.toISOString().split('T')[0]; // Formato: YYYY-MM-DD
+    }
+    
+    // Si no envían hora, usar la hora actual
+    if (!hora) {
+        const ahora = new Date();
+        const horas = String(ahora.getHours()).padStart(2, '0');
+        const minutos = String(ahora.getMinutes()).padStart(2, '0');
+        hora = `${horas}:${minutos}`; // Formato: HH:MM
+    }
+    
+    const doctoresDisponibles = buscarDoctoresDisponibles(fecha, hora);
+    
     return res.status(200).json({
         success: true,
-        data: doctores
-    })
-})
-
+        data: doctoresDisponibles,
+        fecha: fecha,
+        hora: hora
+    });
+});
 //// Endpoint Notificaciones ///////
 
 app.get('/api/notificaciones/citas-proximas', (req, res) =>{    
