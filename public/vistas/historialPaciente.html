@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Citas</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>📋 Historial de Citas</h1>
+        <h2 id="paciente-header-info">Cargando datos del paciente...</h2>
+    </header>
+
+    <main id="historial-citas-view">
+        
+        <section class="filters-container">
+            <h3>Filtrar por Estado:</h3>
+            <select id="filtro-estado" class="form-control">
+                <option value="todas">Todas</option>
+                <option value="programada">Programadas</option>
+                <option value="cancelada">Canceladas</option>
+                <option value="completada">Completadas</option>
+            </select>
+        </section>
+
+        <section class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Doctor(a)</th>
+                        <th>Especialidad</th>
+                        <th>Motivo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="citas-tbody">
+                    </tbody>
+            </table>
+            <p id="sin-citas-msg" class="mensaje-oculto">Sin citas registradas para este paciente.</p>
+        </section>
+
+        <div class="back-link">
+            <a href="./pacientes.html">← Volver a la Lista de Pacientes</a>
+        </div>
+
+    </main>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

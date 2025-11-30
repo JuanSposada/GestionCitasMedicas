@@ -3,50 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Paciente - Gestión Médica</title>
+    <title>Editar Paciente - Gestión Médica</title>
     <link rel="stylesheet" href="../css/style.css"> 
 </head>
 <body>
 
     <header>
-        <h1>👤 Registrar Nuevo Paciente</h1>
-        <p>Completa los campos a continuación para registrar un nuevo paciente en el sistema.</p>
+        <h1>✏️ Editar Datos del Paciente</h1>
+        <p id="form-header-status">Modifica los campos necesarios y guarda los cambios.</p>
     </header>
 
     <main>
         <section class="form-container">
             
-            <form id="registroPacienteForm">
+            <!-- El formulario usará el método PUT gracias a la lógica en main.js -->
+            <form id="edicionPacienteForm">
                 
+                <!-- Campo Oculto para el ID del Paciente (Necesario para la edición/PUT) -->
+                <input type="hidden" id="pacienteId" name="id" value=""> 
+
                 <div class="form-group">
                     <label for="nombre">Nombre Completo:</label>
                     <input type="text" id="nombre" name="nombre" required>
+                    <span class="error-message" id="error-nombre"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="edad">Edad:</label>
                     <input type="number" id="edad" name="edad" min="1" max="120" required>
+                    <span class="error-message" id="error-edad"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="telefono">Teléfono:</label>
                     <input type="tel" id="telefono" name="telefono" required>
+                    <span class="error-message" id="error-telefono"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Correo Electrónico (Email):</label>
                     <input type="email" id="email" name="email" required>
+                    <span class="error-message" id="error-email"></span>
                 </div>
 
-                <button type="submit" class="btn-submit">
-                    Registrar Paciente
-                </button>
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        Guardar Cambios
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="window.location.href='./pacientes.html'">
+                        Cancelar
+                    </button>
+                </div>
 
                 <p id="mensaje-estado" class="mensaje-oculto"></p>
             </form>
 
             <div class="back-link">
-                <a href="./dashboard.html">← Volver a la Home Page</a>
+                <a href="./pacientes.html">← Volver a la Lista de Pacientes</a>
             </div>
 
         </section>

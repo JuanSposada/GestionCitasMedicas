@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pacientes</title>
+    <!-- Asumiendo que tu archivo CSS general está en "../css/style.css" -->
+    <link rel="stylesheet" href="../css/style.css"> 
+    <style>
+        /* Estilos específicos para la tabla y el listado, copiados de doctores.html */
+        .list-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .search-container {
+            flex-grow: 1;
+            max-width: 300px;
+        }
+        .search-container input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .data-table th {
+            background-color: #f8f8f8;
+            font-weight: 600;
+            color: #333;
+        }
+        .data-table tr:hover {
+            background-color: #f4f9ff;
+        }
+        .action-buttons button {
+            padding: 6px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        /* Colores de botón adaptados de la vista de doctores */
+        .btn-edit { background-color: #2196F3; color: white; }
+        .btn-history { background-color: #ff9800; color: white; }
+        .btn-delete { background-color: #f44336; color: white; }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .search-container {
+                width: 100%;
+                max-width: none;
+                margin-bottom: 10px;
+            }
+            .data-table, .data-table thead, .data-table tbody, .data-table th, .data-table td, .data-table tr {
+                display: block;
+            }
+            .data-table thead {
+                display: none;
+            }
+            .data-table tr {
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            .data-table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+            .data-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 15px;
+                font-weight: bold;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>👥 Gestión de Pacientes</h1>
+        <p>Listado completo de pacientes registrados en el sistema.</p>
+    </header>
+
+    <main class="list-container" id="pacientes-list-view">
+        <div class="header-actions">
+            <!-- Botón Nuevo Paciente, apunta al formulario de registro -->
+            <a href="registrarPaciente.html" class="btn-submit">
+                + Nuevo Paciente
+            </a>
+            
+            <!-- Buscador por Nombre o ID -->
+            <div class="search-container">
+                <input type="text" id="pacienteSearch" placeholder="Buscar por Nombre o ID...">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th>Fecha de Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="pacientesTableBody">
+                    <!-- Los datos se cargarán aquí mediante JavaScript -->
+                    <tr><td colspan="7" style="text-align:center;">Cargando lista de pacientes...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="back-link" style="margin-top: 20px;">
+            <a href="dashboard.html">← Volver a la Home Page</a>
+        </div>
+    </main>
+
+    <script src="../js/main.js"></script>
+
+</body>
+</html>

@@ -136,5 +136,42 @@
       "Sábado",
       "Domingo"
     ]
+  },
+  {
+    "id": "D012",
+    "nombre": "Zareth Villa",
+    "especialidad": "Pediatría",
+    "horarioInicio": "09:59",
+    "horarioFin": "15:56",
+    "diasDisponibles": []
+  },
+  {
+    "id": "D013",
+    "nombre": "Zareth Villa",
+    "especialidad": "Neurología",
+    "horarioInicio": "09:57",
+    "horarioFin": "21:01",
+    "diasDisponibles": []
+  },
+  {
+    "id": "D014",
+    "nombre": "María Mariscal",
+    "especialidad": "Dermatología",
+    "horarioInicio": "11:58",
+    "horarioFin": "15:58",
+    "diasDisponibles": []
+  },
+  {
+    "id": "D015",
+    "nombre": "Ramon Ortega",
+    "especialidad": "Odontología",
+    "horarioInicio": "15:02",
+    "horarioFin": "22:02",
+    "diasDisponibles": [
+      "Jueves",
+      "Viernes",
+      "Sábado",
+      "Domingo"
+    ]
   }
 ]

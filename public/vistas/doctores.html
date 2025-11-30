@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Doctores</title>
+    <link rel="stylesheet" href="../css/style.css"> 
+    </head>
+<body>
+
+    <header>
+        <h1>🧑‍⚕️ Gestión de Doctores</h1>
+        <p>Listado completo de personal médico registrado en el sistema.</p>
+    </header>
+
+    <main class="list-container" id="doctores-list-view">
+        <div class="header-actions">
+            <a href="registrarDoctor.html" class="btn-submit">
+                + Nuevo Doctor
+            </a>
+            
+            <div class="search-container">
+                <input type="text" id="doctorSearch" placeholder="Buscar por Nombre o ID...">
+            </div>
+
+            <div class="filter-container">
+                <select id="especialidadFilter" class="form-control">
+                    <option value="todas">Todas las Especialidades</option>
+                    </select>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Especialidad</th>
+                        <th>Horario</th>
+                        <th>Días</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="doctoresTableBody">
+                    <tr><td colspan="6" style="text-align:center;">Cargando lista de doctores...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="back-link" style="margin-top: 20px;">
+            <a href="dashboard.html">← Volver a la Home Page</a>
+        </div>
+    </main>
+
+    <script src="../js/main.js"></script>
+
+</body>
+</html>
