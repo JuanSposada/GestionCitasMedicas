@@ -516,3 +516,102 @@ textarea {
         color: #007bff;
     }
 }
+
+
+/* * --------------------------------
+ * Media Queries para Responsive Design OPTIMIZADA
+ * --------------------------------
+ */
+
+/* Pantallas Medianas y Tabletas (Max 992px) */
+@media (max-width: 992px) {
+    /* 1. Dashboard Grid: Pasa a ser de una sola columna */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* 2. Tarjetas de Estadísticas: Permite que las tarjetas fluyan mejor en dos columnas si hay espacio */
+    .stats-cards {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    /* 3. Listas de Registro (Dashboard/Inicio): Permite que crezcan para no dejar espacios raros */
+    .registro-links li {
+        min-width: 100%; /* Ocupa todo el ancho si la pantalla es estrecha */
+    }
+}
+
+/* Pantallas Pequeñas y Móviles (Max 768px) */
+@media (max-width: 768px) {
+    /* Ajustes Generales */
+    header h1 {
+        font-size: 1.8em;
+    }
+    header p {
+        font-size: 1em;
+    }
+    main {
+        margin: 20px auto;
+        padding: 0 10px;
+    }
+    
+    section {
+        padding: 15px;
+    }
+    
+    /* Ajuste de Botones */
+    .action-buttons button {
+        display: block; /* Cada botón en una línea separada */
+        width: 100%;
+        margin-bottom: 8px;
+        margin-right: 0;
+    }
+
+    /* 4. Tablas (Dashboard y Pacientes/Citas): Uso del patrón Card View */
+    /* Este bloque ya lo tienes bien definido, solo aseguramos que el data-label use el color primario */
+    #pacientesTable td::before, 
+    #citas-hoy-table td::before {
+        color: #007bff; /* Aseguramos el color en todas las tablas */
+    }
+    
+    /* Ajustes específicos para el Horario de Doctores/Especialistas */
+    .horario-group {
+        flex-direction: column; /* Apila los campos de inicio y fin */
+        gap: 15px;
+    }
+    .horario-group input[type="time"] {
+        min-width: 100%;
+    }
+
+    /* Ajuste para formularios (quitar max-width en móvil para usar todo el espacio) */
+    .form-container {
+        max-width: 100%;
+        padding: 15px;
+    }
+    
+    /* 5. Días Disponibles (Checkbox Group) */
+    .checkbox-group {
+        flex-direction: column; /* Apila los días verticalmente para mejor toque */
+        gap: 10px;
+    }
+}
+
+/* Pantallas Móviles Muy Pequeñas (Max 480px) */
+@media (max-width: 480px) {
+    /* Reducir aún más el tamaño de fuente para el encabezado */
+    header h1 {
+        font-size: 1.6em;
+    }
+
+    /* Ajustar el padding de la tabla responsiva */
+    #pacientesTable td, #citas-hoy-table td {
+        /* Se reduce el padding-left para dar más espacio al contenido en pantallas estrechas */
+        padding-left: 40%;
+    }
+
+    #pacientesTable td::before, #citas-hoy-table td::before {
+        /* Se reduce el ancho de la etiqueta */
+        width: 35%;
+    }
+}

@@ -12,6 +12,7 @@ let ALL_APPOINTMENTS = [];
 // Almacena todos los doctores para el filtro
 let ALL_DOCTORS = [];
 
+let ALL_PATIENTS = []
 // Elementos del DOM
 const appointmentsTableBody = document.getElementById('appointments-table-body');
 const filterStatusSelect = document.getElementById('filter-status');
@@ -20,6 +21,7 @@ const filterDoctorSelect = document.getElementById('filter-doctor');
 const noResultsMessage = document.getElementById('no-results-message');
 const detailsModal = document.getElementById('details-modal');
 const modalDetailsContent = document.getElementById('modal-details-content');
+
 
 // ----------------------------------------------------------------------
 // FUNCIONES AUXILIARES (del código previo, solo la necesaria para este contexto)
@@ -35,6 +37,8 @@ const mostrarModal = (modalId) => {
         modal.style.display = 'flex';
     }
 };
+
+window.mostrarModal = mostrarModal;
 
 /**
  * Oculta el modal de detalles o registro.
@@ -148,7 +152,7 @@ const renderAppointmentsTable = (appointments) => {
     appointments.forEach(cita => {
         // Buscar nombre del doctor (se asume que cita.doctorId tiene el ID del doctor)
         const doctor = ALL_DOCTORS.find(d => d.id == cita.doctorId) || { nombre: 'N/A', especialidad: 'N/A' };
-
+        const paciente = ALL_PATIENTS.find(p => p.id == cita.pacienteId) || { nombre: 'N/A' };
         // Determinación de clases para el estado (pills)
         let statusClass = '';
         let buttonAction = '';
@@ -158,19 +162,19 @@ const renderAppointmentsTable = (appointments) => {
         switch (cita.estado.toLowerCase()) {
             case 'programada':
                 statusClass = 'status-programada';
-                buttonAction = `showModalDetails(${cita.id})`;
+                buttonAction = `showModalDetails('${cita.id}')`;
                 buttonText = 'Detalles';
                 buttonDisabled = '';
                 break;
             case 'cancelada':
                 statusClass = 'status-cancelada';
-                buttonAction = `showModalDetails(${cita.id})`;
+                buttonAction = `showModalDetails('${cita.id}')`;
                 buttonText = 'Detalles';
                 buttonDisabled = 'btn-disabled';
                 break;
             case 'completada':
                 statusClass = 'status-completada';
-                buttonAction = `showModalDetails(${cita.id})`;
+                buttonAction = `showModalDetails('${cita.id}')`;
                 buttonText = 'Detalles';
                 buttonDisabled = 'btn-disabled';
                 break;
@@ -183,14 +187,14 @@ const renderAppointmentsTable = (appointments) => {
                 <td data-label="ID">${cita.id}</td>
                 <td data-label="Fecha">${cita.fecha}</td>
                 <td data-label="Hora">${cita.hora}</td>
-                <td data-label="Paciente">${cita.pacienteNombre}</td> 
+                <td data-label="Paciente">${paciente.nombre}</td> 
                 <td data-label="Doctor">${doctor.nombre}</td>
                 <td data-label="Especialidad">${doctor.especialidad}</td>
                 <td data-label="Motivo">${cita.motivo.substring(0, 30)}...</td>
                 <td data-label="Estado"><span class="status-pill ${statusClass}">${cita.estado}</span></td>
                 <td data-label="Acciones" class="action-buttons">
                     <button onclick="${buttonAction}" class="btn-details">Ver ${buttonText}</button>
-                    <button onclick="cancelAppointment(${cita.id})" class="btn-cancel ${cita.estado.toLowerCase() !== 'programada' ? 'btn-disabled' : ''}" ${cita.estado.toLowerCase() !== 'programada' ? 'disabled' : ''}>Cancelar</button>
+                    <button onclick="cancelAppointment('${cita.id}')" class="btn-cancel ${cita.estado.toLowerCase() !== 'programada' ? 'btn-disabled' : ''}" ${cita.estado.toLowerCase() !== 'programada' ? 'disabled' : ''}>Cancelar</button>
                 </td>
             </tr>
         `;
@@ -198,6 +202,32 @@ const renderAppointmentsTable = (appointments) => {
     });
 };
 
+// -------------------------------------------------------------
+// FUNCIÓN 3.5: CARGAR PACIENTES
+// -------------------------------------------------------------
+
+const fetchAllPatients = async () => {
+    try {
+        const url = `${API_BASE_URL}/pacientes`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.success && Array.isArray(result.data)) {
+            ALL_PATIENTS = result.data;
+            console.log(`DEBUG: Pacientes cargados: ${ALL_PATIENTS.length}`);
+        } else {
+            console.error("Respuesta del servidor no válida para pacientes:", result);
+        }
+
+    } catch (error) {
+        console.error("Error al obtener pacientes:", error);
+    }
+}
 
 // -------------------------------------------------------------
 // FUNCIÓN 4: LÓGICA DE FILTRADO PRINCIPAL
@@ -249,82 +279,152 @@ window.clearFilters = clearFilters;
 // -------------------------------------------------------------
 // FUNCIÓN 6: MOSTRAR MODAL DE DETALLES DE CITA
 // -------------------------------------------------------------
+// --- CONSTANTES Y VARIABLES GLOBALES (al inicio de citas.js) ---
+// ... (ALL_APPOINTMENTS, ALL_DOCTORS, ALL_PATIENTS, etc.)
 
+// Elementos del DOM para detalles del modal
+const modalCitaId = document.getElementById('modal-cita-id');
+const detailsCita = document.getElementById('details-cita');
+const detailsPaciente = document.getElementById('details-paciente');
+const detailsDoctor = document.getElementById('details-doctor');
+const btnCancelarModal = document.getElementById('btn-cancelar-modal');
+
+// -------------------------------------------------------------------
+// FUNCIÓN PARA MOSTRAR DETALLES DE CITA
+// -------------------------------------------------------------------
 /**
- * Busca y muestra los detalles de una cita específica en el modal.
+ * Busca y muestra los detalles de una cita específica en el modal,
+ * incluyendo los datos completos del paciente y doctor.
  * @param {number} appointmentId - ID de la cita a mostrar.
  */
 const showModalDetails = (appointmentId) => {
+    // 1. Obtener los objetos de la cita, doctor y paciente
     const cita = ALL_APPOINTMENTS.find(a => a.id == appointmentId);
+    
     if (!cita) {
         alert('Cita no encontrada.');
         return;
     }
 
-    const doctor = ALL_DOCTORS.find(d => d.id == cita.doctorId) || { nombre: 'N/A', especialidad: 'N/A' };
-    
-    const detailsHtml = `
-        <p><strong>ID de Cita:</strong> ${cita.id}</p>
-        <p><strong>Estado:</strong> <span class="status-pill ${cita.estado.toLowerCase()}">${cita.estado}</span></p>
-        <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
+    // Usamos las listas cargadas previamente (ALL_DOCTORS y ALL_PATIENTS)
+    const doctor = ALL_DOCTORS.find(d => d.id == cita.doctorId) || { nombre: 'N/A', especialidad: 'N/A', telefono: 'N/A' };
+    // Se asume que ALL_PATIENTS tiene los campos: nombre, edad, telefono, email
+    const paciente = ALL_PATIENTS.find(p => p.id == cita.pacienteId) || { nombre: 'N/A', edad: 'N/A', telefono: 'N/A', email: 'N/A' };
+
+    // 2. Renderizar la información de la Cita
+    const statusClass = cita.estado.toLowerCase().replace(' ', '');
+    const citaHtml = `
+        <h4 style="color: #007bff; margin-bottom: 5px;">Información de la Cita</h4>
+        <p><strong>Estado:</strong> <span class="status-pill status-${statusClass}">${cita.estado}</span></p>
         <p><strong>Fecha y Hora:</strong> ${cita.fecha} a las ${cita.hora}</p>
-        <p><strong>Paciente:</strong> ${cita.pacienteNombre} (ID: ${cita.pacienteId})</p>
-        <p><strong>Doctor:</strong> ${doctor.nombre}</p>
-        <p><strong>Especialidad:</strong> ${doctor.especialidad}</p>
         <p><strong>Motivo Completo:</strong> ${cita.motivo}</p>
     `;
+    
+    // 3. Renderizar la información del Paciente
+    const pacienteHtml = `
+        <h4 style="color: #28a745; margin-bottom: 5px;">Datos del Paciente</h4>
+        <p><strong>Nombre:</strong> ${paciente.nombre}</p>
+        <p><strong>Edad:</strong> ${paciente.edad} años</p>
+        <p><strong>Teléfono:</strong> ${paciente.telefono || 'N/A'}</p>
+        <p><strong>Email:</strong> ${paciente.email || 'N/A'}</p>
+        <p><strong>ID del Sistema:</strong> ${cita.pacienteId}</p>
+    `;
 
-    modalDetailsContent.innerHTML = detailsHtml;
+    // 4. Renderizar la información del Doctor
+    const doctorHtml = `
+        <h4 style="color: #17a2b8; margin-bottom: 5px;">Datos del Doctor</h4>
+        <p><strong>Nombre:</strong> ${doctor.nombre}</p>
+        <p><strong>Especialidad:</strong> ${doctor.especialidad}</p>
+        <p><strong>Teléfono:</strong> ${doctor.telefono || 'N/A'}</p>
+        <p><strong>ID del Sistema:</strong> ${cita.doctorId}</p>
+    `;
+
+    // 5. Inyectar en el DOM
+    modalCitaId.textContent = `(#${cita.id})`;
+    detailsCita.innerHTML = citaHtml;
+    detailsPaciente.innerHTML = pacienteHtml;
+    detailsDoctor.innerHTML = doctorHtml;
+
+    // 6. Configurar el botón de Cancelar
+    if (cita.estado.toLowerCase() === 'programada') {
+        btnCancelarModal.style.display = 'inline-block';
+        
+        // **Lógica de Confirmación (¡Esto está bien!)**
+        btnCancelarModal.onclick = () => {
+            if (confirm(`¿Está seguro de cancelar la cita #${cita.id} con el Dr. ${doctor.nombre}? Esta acción es irreversible.`)) {
+                // Asume que tienes una función `cancelAppointment(id)` definida.
+                cancelAppointment(cita.id); 
+                ocultarModal('details-modal'); // Cierra el modal
+            }
+        };
+    } else {
+        // Ocultar el botón si el estado no es 'programada'
+        btnCancelarModal.style.display = 'none';
+    }
+
+    // 7. Mostrar el Modal
     mostrarModal('details-modal');
 };
-// Expone la función al ámbito global para el HTML
+
+// Expone la función al ámbito global
 window.showModalDetails = showModalDetails;
 
-
-// -------------------------------------------------------------
-// FUNCIÓN 7: CANCELAR CITA (Simulación de POST/PUT)
-// -------------------------------------------------------------
+// Citas.js - FUNCIÓN 7: CANCELAR CITA (Implementación REAL)
 
 /**
- * Envía una solicitud al servidor para cambiar el estado de la cita a 'cancelada'.
- * @param {number} appointmentId - ID de la cita a cancelar.
+ * Envía una solicitud PUT para cambiar el estado de la cita a 'cancelada'
+ * usando el endpoint específico de cancelación del servidor.
+ * @param {string | number} appointmentId - ID de la cita a cancelar.
  */
 const cancelAppointment = async (appointmentId) => {
+    // 1. Confirmación de seguridad
     if (!confirm(`¿Está seguro que desea cancelar la cita #${appointmentId}? Esta acción es irreversible.`)) {
         return;
     }
 
     try {
-        // En un entorno real, enviaríamos un PUT/PATCH para actualizar el estado
+        // La URL debe coincidir con tu endpoint: /api/citas/:id/cancelar
         const url = `${API_BASE_URL}/citas/${appointmentId}/cancelar`; 
         
-        // Simulación: No hacemos un fetch real, solo actualizamos el estado en memoria para el demo
-        // Reemplaza esta simulación con tu lógica de fetch real:
-        // const response = await fetch(url, { method: 'PATCH' });
-        // if (!response.ok) throw new Error('Falló la cancelación en el servidor');
-        // const result = await response.json();
+        // El método debe ser PUT y NO se debe enviar 'body'
+        const response = await fetch(url, {
+            method: 'PUT', // <-- USAMOS PUT PARA COINCIDIR CON EL BACKEND
+            headers: {
+                'Content-Type': 'application/json',
+                // Sin 'body', ya que el backend usa la URL y el método PUT
+            },
+        });
 
-        // SIMULACIÓN:
-        const citaIndex = ALL_APPOINTMENTS.findIndex(a => a.id == appointmentId);
-        if (citaIndex !== -1 && ALL_APPOINTMENTS[citaIndex].estado.toLowerCase() === 'programada') {
-            ALL_APPOINTMENTS[citaIndex].estado = 'Cancelada'; // Actualiza el estado
-            alert(`Cita #${appointmentId} cancelada exitosamente.`);
-            filterAppointments(); // Volver a renderizar la tabla con el nuevo estado
-        } else if (citaIndex !== -1) {
-            alert(`La cita #${appointmentId} ya está en estado: ${ALL_APPOINTMENTS[citaIndex].estado}.`);
+        const result = await response.json();
+
+        // Verificamos si la respuesta HTTP es exitosa (200) Y si el success del body es true
+        if (response.ok && result.success) { 
+            
+            // 2. Actualizar la lista local (solo si la API fue exitosa)
+            const citaIndex = ALL_APPOINTMENTS.findIndex(a => a.id == appointmentId);
+            
+            if (citaIndex !== -1) {
+                // Actualizamos el estado local a 'cancelada' (debe coincidir con la actualización del backend)
+                ALL_APPOINTMENTS[citaIndex].estado = 'cancelada'; 
+                
+                // 3. Refrescar la tabla
+                filterAppointments(); 
+                
+                alert(`✅ Cita #${appointmentId} cancelada exitosamente.`);
+            }
+
         } else {
-            alert('Error: Cita no encontrada localmente.');
+            // Manejar errores de validación (400) o no encontrado (404)
+            throw new Error(result.message || 'Error desconocido al cancelar la cita.');
         }
-
 
     } catch (error) {
         console.error("Error al cancelar la cita:", error);
-        alert('Ocurrió un error al intentar cancelar la cita. Revise la consola.');
+        alert(`❌ Ocurrió un error al cancelar la cita. Mensaje: ${error.message}`);
     }
 };
-// Expone la función al ámbito global para el HTML
-window.cancelAppointment = cancelAppointment;
 
+window.cancelAppointment = cancelAppointment;
 
 // -------------------------------------------------------------
 // INICIALIZACIÓN
@@ -336,7 +436,7 @@ window.cancelAppointment = cancelAppointment;
 const initAppointmentsPage = async () => {
     // 1. Cargar la lista de doctores (necesario para el filtro y la tabla)
     await fetchDoctorsForFilter(); 
-
+    await fetchAllPatients()
     // 2. Cargar todas las citas
     fetchAllAppointments();
 

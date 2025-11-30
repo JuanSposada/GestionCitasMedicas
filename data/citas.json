@@ -15,7 +15,7 @@
     "fecha": "2025-11-12",
     "hora": "14:00",
     "motivo": "Consulta por dolor de cabeza",
-    "estado": "programada"
+    "estado": "cancelada"
   },
   {
     "id": "C003",
@@ -24,7 +24,7 @@
     "fecha": "2025-11-15",
     "hora": "09:30",
     "motivo": "Dolor en la pierna",
-    "estado": "programada"
+    "estado": "cancelada"
   },
   {
     "id": "C004",
@@ -96,7 +96,7 @@
     "fecha": "2025-11-25",
     "hora": "11:00",
     "motivo": "dolor de espalda",
-    "estado": "Pendiente"
+    "estado": "cancelada"
   },
   {
     "id": "C012",
@@ -169,5 +169,23 @@
     "hora": "09:31",
     "motivo": "chequeo general",
     "estado": "cancelada"
+  },
+  {
+    "id": "C020",
+    "pacienteId": "P004",
+    "doctorId": "D004",
+    "fecha": "2025-12-02",
+    "hora": "11:37",
+    "motivo": "prisa",
+    "estado": "programada"
+  },
+  {
+    "id": "C021",
+    "pacienteId": "P006",
+    "doctorId": "D015",
+    "fecha": "2025-11-30",
+    "hora": "17:33",
+    "motivo": "salud",
+    "estado": "programada"
   }
 ]

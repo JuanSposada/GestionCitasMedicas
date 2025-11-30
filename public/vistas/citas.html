@@ -360,20 +360,27 @@
 
 
     <!-- MODAL DE DETALLES DE CITA -->
-    <div id="details-modal" class="modal" onclick="if(event.target.id === 'details-modal') ocultarModal('details-modal');">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 style="margin: 0; color: #007bff;">Detalles de la Cita</h3>
-                <button onclick="ocultarModal('details-modal')" class="modal-close">&times;</button>
-            </div>
-            <div id="modal-details-content" style="color: #333; line-height: 1.8;">
-                <!-- Los detalles se inyectarán aquí por JS -->
-            </div>
-            <div style="margin-top: 20px; text-align: right;">
-                 <button onclick="ocultarModal('details-modal')" class="btn-secondary">Cerrar</button>
-            </div>
+<div id="details-modal" class="modal" onclick="if(event.target.id === 'details-modal') ocultarModal('details-modal');">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="margin: 0; color: #007bff;">Detalles de la Cita <span id="modal-cita-id"></span></h3>
+            <button onclick="ocultarModal('details-modal')" class="modal-close">&times;</button>
+        </div>
+        
+        <div id="modal-details-content" style="color: #333; line-height: 1.8;">
+            <div id="details-cita"></div>
+            <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
+            <div id="details-paciente"></div>
+            <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
+            <div id="details-doctor"></div>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: right;">
+            <button id="btn-cancelar-modal" class="btn-cancel" style="display: none;">Cancelar Cita</button>
+            <button onclick="ocultarModal('details-modal')" class="btn-secondary">Cerrar</button>
         </div>
     </div>
+</div>
 
     <!-- MODAL DE NUEVA CITA (Placeholder) -->
     <div id="new-appointment-modal" class="modal" onclick="if(event.target.id === 'new-appointment-modal') ocultarModal('new-appointment-modal');">
