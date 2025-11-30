@@ -21,7 +21,7 @@
     "horarioFin": "23:00",
     "diasDisponibles": [
       "Martes",
-      "Miércoles",
+      "Miercoles",
       "Jueves"
     ]
   },
@@ -73,6 +73,67 @@
       "Lunes",
       "Jueves",
       "Viernes",
+      "Domingo"
+    ]
+  },
+  {
+    "id": "D007",
+    "nombre": "Dra. Ariell Morales",
+    "especialidad": "Pediatria",
+    "horarioInicio": "08:00",
+    "horarioFin": "16:00",
+    "diasDisponibles": [
+      "Lunes",
+      "Jueves",
+      "Viernes"
+    ]
+  },
+  {
+    "id": "D008",
+    "nombre": "Dra. Lila Villa",
+    "especialidad": "Pediatria",
+    "horarioInicio": "08:00",
+    "horarioFin": "16:00",
+    "diasDisponibles": [
+      "Lunes",
+      "Jueves",
+      "Viernes"
+    ]
+  },
+  {
+    "id": "D009",
+    "nombre": "Dra. Elvira Perez",
+    "especialidad": "Pediatria",
+    "horarioInicio": "08:00",
+    "horarioFin": "20:00",
+    "diasDisponibles": [
+      "Lunes",
+      "Jueves",
+      "Viernes"
+    ]
+  },
+  {
+    "id": "D010",
+    "nombre": "Dr. Jorge Negrete",
+    "especialidad": "Cirujia",
+    "horarioInicio": "01:00",
+    "horarioFin": "24:00",
+    "diasDisponibles": [
+      "Lunes",
+      "Martes",
+      "Miercoles",
+      "Jueves"
+    ]
+  },
+  {
+    "id": "D011",
+    "nombre": "Dr. Zareth Villa",
+    "especialidad": "Medicina General",
+    "horarioInicio": "08:00",
+    "horarioFin": "20:00",
+    "diasDisponibles": [
+      "Viernes",
+      "Sábado",
       "Domingo"
     ]
   }

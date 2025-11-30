@@ -70,5 +70,104 @@
     "hora": "06:00",
     "motivo": "Urgencias",
     "estado": "programada"
+  },
+  {
+    "id": "C009",
+    "pacienteId": "P003",
+    "doctorId": "D001",
+    "fecha": "2025-11-12",
+    "hora": "11:00",
+    "motivo": "Urgencias",
+    "estado": "programada"
+  },
+  {
+    "id": "C010",
+    "pacienteId": "P003",
+    "doctorId": "D001",
+    "fecha": "2025-11-15",
+    "hora": "10:00",
+    "motivo": "Urgencias",
+    "estado": "programada"
+  },
+  {
+    "id": "C011",
+    "pacienteId": "P008",
+    "doctorId": "D008",
+    "fecha": "2025-11-25",
+    "hora": "11:00",
+    "motivo": "dolor de espalda",
+    "estado": "Pendiente"
+  },
+  {
+    "id": "C012",
+    "pacienteId": "P006",
+    "doctorId": "D009",
+    "fecha": "2025-11-29",
+    "hora": "19:35",
+    "motivo": "hambre",
+    "estado": "programada"
+  },
+  {
+    "id": "C013",
+    "pacienteId": "P001",
+    "doctorId": "D011",
+    "fecha": "2025-11-29",
+    "hora": "19:49",
+    "motivo": "estres",
+    "estado": "cancelada"
+  },
+  {
+    "id": "C014",
+    "pacienteId": "P004",
+    "doctorId": "D009",
+    "fecha": "2025-11-29",
+    "hora": "20:00",
+    "motivo": "dolor en ojo",
+    "estado": "cancelada"
+  },
+  {
+    "id": "C015",
+    "pacienteId": "P004",
+    "doctorId": "D011",
+    "fecha": "2025-11-29",
+    "hora": "19:25",
+    "motivo": "resfriado",
+    "estado": "programada"
+  },
+  {
+    "id": "C016",
+    "pacienteId": "P007",
+    "doctorId": "D011",
+    "fecha": "2025-11-29",
+    "hora": "19:40",
+    "motivo": "çomezon",
+    "estado": "cancelada"
+  },
+  {
+    "id": "C017",
+    "pacienteId": "P001",
+    "doctorId": "D011",
+    "fecha": "2025-11-29",
+    "hora": "19:17",
+    "motivo": "fierbre",
+    "estado": "cancelada"
+  },
+  {
+    "id": "C018",
+    "pacienteId": "P008",
+    "doctorId": "D011",
+    "fecha": "2025-11-29",
+    "hora": "18:57",
+    "motivo": "fiebre",
+    "estado": "programada"
+  },
+  {
+    "id": "C019",
+    "pacienteId": "P003",
+    "doctorId": "D011",
+    "fecha": "2025-11-30",
+    "hora": "09:31",
+    "motivo": "chequeo general",
+    "estado": "programada"
   }
 ]

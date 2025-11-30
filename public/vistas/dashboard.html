@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Gestión Médica</title>
+    <link rel="stylesheet" href="../css/style.css"> 
+</head>
+<body>
+
+    <header>
+        <h1>📊 Panel de Control de Citas</h1>
+        <p>Resumen y estadísticas generales del sistema.</p>
+    </header>
+
+    <main class="dashboard-grid">
+        
+        <nav class="sidebar">
+            <h2>Menú</h2>
+            <ul>
+                <li><a href="/vistas/dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="/vistas/registrarPaciente.html">Pacientes (Registro)</a></li>
+                <li><a href="/vistas/registrarDoctor.html">Doctores (Registro)</a></li>
+                <li><a href="/vistas/registrarCita.html">Citas (Agendar)</a></li>
+                </ul>
+        </nav>
+
+        <section class="content">
+            
+            <div class="stats-cards">
+                <div class="card" id="card-pacientes">
+                    <h3>Total de Pacientes</h3>
+                    <p class="stat-value">...</p>
+                </div>
+                <div class="card" id="card-doctores">
+                    <h3>Doctores Activos</h3>
+                    <p class="stat-value">...</p>
+                </div>
+                <div class="card" id="card-citas-hoy">
+                    <h3>Citas Programadas Hoy</h3>
+                    <p class="stat-value">...</p>
+                </div>
+                <div class="card" id="card-citas-24h">
+                    <h3>Citas Próximas (24h)</h3>
+                    <p class="stat-value">...</p>
+                </div>
+            </div>
+
+            <div class="today-appointments">
+                <h2>Citas Programadas para Hoy</h2>
+                <table id="citas-hoy-table">
+                    <thead>
+                        <tr>
+                            <th>Hora</th>
+                            <th>Paciente</th>
+                            <th>Doctor</th>
+                            <th>Motivo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5">Cargando citas...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+        </section>
+    </main>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

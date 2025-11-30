@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 const port = 3000;
 const {leerDB,
     escribirDB,
@@ -30,9 +31,11 @@ const {leerDB,
 
 app.use(express.json())
 app.use(express.urlencoded({extended : true}))
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res)=>{
-    res.send('API - "Citas Medicas" \nJUAN SEBASTIAN MORENO POSADA\n22760047')
+app.get('/', (req, res) => {
+    // Envía el archivo 'home.html' que estará dentro de 'public/vistas/'
+    res.sendFile(path.join(__dirname, 'public', 'vistas', 'dashboard.html'));
 });
 
 //////// Endpoints Pacientes /////////
@@ -226,21 +229,27 @@ app.post('/api/citas', (req, res) =>{
 })
 
 app.get('/api/citas', (req, res) => {
-  const { fecha, estado } = req.query;
-  console.log('Parámetros recibidos:', { fecha, estado });
+    const { fecha, estado } = req.query;
+    console.log('Parámetros recibidos:', { fecha, estado });
 
-  let citas;
+    // 1. Obtener la lista base de citas (todas)
+    let citas = obtenerCitas();
 
-  if (fecha && estado) {
-    citas = buscarCitasPorFechaYEstado(fecha, estado);
-  } else {
-    citas = obtenerCitas();
-  }
+    // 2. Aplicar filtro por FECHA: Si el parámetro 'fecha' está presente, filtramos.
+    if (fecha) {
+        citas = citas.filter(cita => cita.fecha === fecha);
+    }
+    
+    // 3. Aplicar filtro por ESTADO: Si el parámetro 'estado' está presente, 
+    // filtramos sobre el resultado del paso anterior.
+    if (estado) {
+        citas = citas.filter(cita => cita.estado.toLowerCase() === estado.toLowerCase());
+    }
 
-  return res.status(200).json({
-    success: true,
-    data: citas
-  });
+    return res.status(200).json({
+        success: true,
+        data: citas
+    });
 });
 
 app.get('/api/citas/:id', (req, res) =>{

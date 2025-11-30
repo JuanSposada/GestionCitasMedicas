@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Nueva Cita - Gestión Médica</title>
+    <link rel="stylesheet" href="../css/style.css"> 
+</head>
+<body>
+
+    <header>
+        <h1>📅 Agendar Nueva Cita</h1>
+        <p>Selecciona el paciente, el doctor, la fecha, hora y motivo para programar la cita.</p>
+    </header>
+
+    <main>
+        <section class="form-container">
+            
+            <form id="registroCitaForm">
+                
+                <div class="form-group">
+                    <label for="pacienteId">Seleccionar Paciente:</label>
+                    <select id="pacienteId" name="pacienteId" required>
+                        <option value="">Cargando pacientes...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="doctorId">Seleccionar Doctor:</label>
+                    <select id="doctorId" name="doctorId" required>
+                        <option value="">Cargando doctores...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fecha">Fecha de la Cita:</label>
+                    <input type="date" id="fecha" name="fecha" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="hora">Hora de la Cita:</label>
+                    <input type="time" id="hora" name="hora" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="motivo">Motivo de la Cita:</label>
+                    <textarea id="motivo" name="motivo" rows="4" required></textarea>
+                </div>
+
+                <input type="hidden" id="estado" name="estado" value="programada">
+
+                <button type="submit" class="btn-submit">
+                    Agendar Cita
+                </button>
+
+                <p id="mensaje-estado" class="mensaje-oculto"></p>
+            </form>
+
+            <div class="back-link">
+                <a href="/vistas/home.html">← Volver a la Home Page</a>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="../js/main.js"></script>
+
+</body>
+</html>

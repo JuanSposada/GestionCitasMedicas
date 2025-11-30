@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Paciente - Gestión Médica</title>
+    <link rel="stylesheet" href="../css/style.css"> 
+</head>
+<body>
+
+    <header>
+        <h1>👤 Registrar Nuevo Paciente</h1>
+        <p>Completa los campos a continuación para registrar un nuevo paciente en el sistema.</p>
+    </header>
+
+    <main>
+        <section class="form-container">
+            
+            <form id="registroPacienteForm">
+                
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edad">Edad:</label>
+                    <input type="number" id="edad" name="edad" min="1" max="120" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="tel" id="telefono" name="telefono" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo Electrónico (Email):</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    Registrar Paciente
+                </button>
+
+                <p id="mensaje-estado" class="mensaje-oculto"></p>
+            </form>
+
+            <div class="back-link">
+                <a href="./home.html">← Volver a la Home Page</a>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="../js/main.js"></script>
+
+</body>
+</html>

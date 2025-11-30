@@ -38,5 +38,29 @@
     "telefono": "555-4490",
     "email": "pedro.rg@email.com",
     "fechaRegistro": "2025-11-08"
+  },
+  {
+    "id": "P006",
+    "nombre": "Raul Alvarez",
+    "edad": 75,
+    "telefono": "555-1190",
+    "email": "serg.rg@email.com",
+    "fechaRegistro": "2025-11-11"
+  },
+  {
+    "id": "P007",
+    "nombre": "Raul Toledo",
+    "edad": 10,
+    "telefono": "555-1190",
+    "email": "r.toledog@email.com",
+    "fechaRegistro": "2025-11-11"
+  },
+  {
+    "id": "P008",
+    "nombre": "Zalem",
+    "edad": 5,
+    "telefono": "1768756",
+    "email": "zalem@elgato.com",
+    "fechaRegistro": "2025-11-22"
   }
 ]
