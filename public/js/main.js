@@ -1,4 +1,8 @@
+// --- CONSTANTES Y ESTADO GLOBAL ---
+const API_BASE_URL = '/api';
 
+// Almacena todas las citas brutas obtenidas del servidor para este doctor
+let ALL_APPOINTMENTS = [];
 /**
  * Muestra mensajes de estado (éxito o error) en el formulario.
  * Esta función es necesaria porque en tu handleSubmit estás usando clases de CSS 
@@ -101,6 +105,294 @@ const getFechaHoraPST = () => {
         ahora: nowPST 
     };
 };
+
+
+const { hoy: TODAY_DATE_STRING_PST, ahora: NOW_PST } = getFechaHoraPST();
+const TODAY_MIDNIGHT_PST = new Date(NOW_PST);
+TODAY_MIDNIGHT_PST.setHours(0, 0, 0, 0); 
+
+const dateToString = (date) => date.toISOString().split('T')[0];
+
+/**
+ * Calcula los rangos de fecha para los filtros preestablecidos.
+ * Utiliza TODAY_MIDNIGHT_PST para iniciar los rangos.
+ * @param {string} filterType - 'today', 'week', 'next7days' o una fecha específica.
+ */
+const getDateRange = (filterType) => {
+    // Usamos el punto de inicio de hoy (medianoche PST)
+    const start = new Date(TODAY_MIDNIGHT_PST);
+    const end = new Date(TODAY_MIDNIGHT_PST);
+    
+    if (filterType === 'today') {
+        end.setDate(end.getDate() + 1); // Rango: Hoy (00:00:00) a Mañana (00:00:00)
+    } else if (filterType === 'week') {
+        const day = start.getDay(); // 0 = Domingo, 6 = Sábado
+        start.setDate(start.getDate() - day); // Ir al domingo
+        end.setDate(start.getDate() + 7); // 7 días después del domingo
+    } else if (filterType === 'next7days') {
+        end.setDate(end.getDate() + 7); // Hoy hasta los próximos 7 días
+    } else {
+        // Si es un filtro personalizado de fecha (una string YYYY-MM-DD)
+        return { isSingleDay: true, targetDate: filterType };
+    }
+
+    return { start: dateToString(start), end: dateToString(end) };
+};
+
+// --- FUNCIÓN 1: RENDERIZACIÓN DEL ENCABEZADO DEL DOCTOR ---
+
+/**
+ * Renderiza los detalles del doctor en el encabezado.
+ * @param {Object} doctor - Objeto con los detalles del doctor.
+ */
+const renderDoctorHeader = (doctor) => {
+    // Asumiendo que el objeto doctor tiene: nombre, especialidad, horario
+    document.getElementById('doctor-name').textContent = `Agenda del Dr. ${doctor.nombre}`;
+    document.getElementById('doctor-specialty').textContent = `Especialidad: ${doctor.especialidad}`;
+    document.getElementById('doctor-schedule').textContent = `Horario: ${doctor.horario}`;
+}
+
+
+// --- FUNCIÓN 2: CARGAR DETALLES DEL DOCTOR ---
+
+/**
+ * Obtiene los detalles del doctor desde el servidor, usando obtenerParametroURL para el ID.
+ */
+const fetchDoctorDetails = async () => {
+    // USO DEL CÓDIGO BASE: Obtener el ID dinámicamente
+    const doctorId = obtenerParametroURL('id');
+    if (!doctorId) {
+        console.error("Error: El ID del doctor no se encontró en la URL (parámetro 'doctor_id').");
+        return; 
+    }
+    console.log(`DEBUG: fetchDoctorDetails - Intentando cargar detalles para Doctor ID: ${doctorId}`);
+
+    try {
+        const url = `${API_BASE_URL}/doctores/${doctorId}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+            renderDoctorHeader(result.data);
+        } else {
+            console.error("Respuesta del servidor no válida para doctor:", result);
+            document.getElementById('doctor-name').textContent = 'Error al cargar datos del doctor';
+        }
+
+    } catch (error) {
+        console.error("Error al obtener detalles del doctor:", error);
+        document.getElementById('doctor-name').textContent = 'Error de conexión';
+    }
+}
+
+
+// --- FUNCIÓN 3: RENDERIZACIÓN DE LA LISTA DE CITAS ---
+
+/**
+ * Renderiza la lista de citas en el DOM.
+ * @param {Array<Object>} appointments - Citas a mostrar.
+ */
+const renderAppointments = (appointments) => {
+    const listContainer = document.getElementById('appointments-list');
+    listContainer.innerHTML = ''; // Limpiar lista anterior
+
+    if (appointments.length === 0) {
+        listContainer.innerHTML = '<div class="appointment-item details">No hay citas agendadas para este período.</div>';
+        return;
+    }
+
+    appointments
+        // Ordenar por fecha y luego por hora
+        .sort((a, b) => {
+            const dateA = new Date(`${a.fecha}T${a.hora}`);
+            const dateB = new Date(`${b.fecha}T${b.hora}`);
+            return dateA - dateB;
+        })
+        .forEach(cita => {
+            // Determinar clases CSS y contenido basado en el estado
+            const isCancelled = cita.estado === 'cancelada';
+            const statusClass = isCancelled ? 'cancelada' : 'programada';
+            // Icono de X para canceladas, Check para programadas
+            const iconContent = isCancelled 
+                ? '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>'
+                : '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/>';
+
+            const appointmentElement = `
+                <div class="appointment-item ${statusClass}">
+                    <!-- Icono de Estado -->
+                    <div class="icon-container">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            ${iconContent}
+                        </svg>
+                    </div>
+                    
+                    <!-- Detalles de la Cita -->
+                    <div class="flex-grow">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p class="patient-name">${cita.pacienteId}</p>
+                            <span class="status-pill">${cita.estado}</span>
+                        </div>
+                        <p class="details">Motivo: ${cita.motivo}</p>
+                        <div class="time-info">
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+                                ${cita.fecha}
+                            </span>
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                ${cita.hora}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            listContainer.insertAdjacentHTML('beforeend', appointmentElement);
+        });
+};
+
+
+// --- FUNCIÓN 4: ACTUALIZACIÓN DE ESTADÍSTICAS ---
+
+/**
+ * Actualiza las tarjetas de estadísticas con los totales.
+ * @param {Array<Object>} allAppointments - El conjunto completo de citas.
+ */
+const updateStats = (allAppointments) => {
+    const programmed = allAppointments.filter(c => c.estado === 'programada').length;
+    const cancelled = allAppointments.filter(c => c.estado === 'cancelada').length;
+    const total = allAppointments.length;
+
+    document.getElementById('total-programmed').textContent = programmed;
+    document.getElementById('total-cancelled').textContent = cancelled;
+    document.getElementById('total-appointments').textContent = total;
+};
+
+
+// --- FUNCIÓN 5: MANEJO VISUAL DE BOTONES DE FILTRO ---
+
+/**
+ * Marca visualmente el botón de filtro activo.
+ * @param {string} filterType - Tipo de filtro ('today', 'week', 'next7days').
+ */
+const setActiveFilterButton = (filterType) => {
+    document.querySelectorAll('.filter-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    const activeButton = document.getElementById(`filter-${filterType}`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+        document.getElementById('date-filter').value = ''; // Limpiar fecha si se usa un pre-set
+    }
+}
+
+// --- FUNCIÓN 6: CARGA INICIAL DE TODAS LAS CITAS ---
+
+/**
+ * Obtiene todas las citas del doctor desde el servidor, usando obtenerParametroURL para el ID.
+ */
+const fetchAllAppointments = async () => {
+    // USO DEL CÓDIGO BASE: Obtener el ID dinámicamente
+    const doctorId = obtenerParametroURL('id');
+    if (!doctorId) {
+        console.error("Error: El ID del doctor no se encontró en la URL (parámetro 'doctor_id').");
+        return; 
+    }
+    console.log(`DEBUG: fetchDoctorDetails - Intentando cargar detalles para Doctor ID: ${doctorId}`);
+
+    // Usamos un simple cargador visual mientras se hace el fetch
+    document.getElementById('appointments-list').innerHTML = '<div class="appointment-item programada details">Cargando agenda...</div>';
+    
+    try {
+        const url = `${API_BASE_URL}/citas/doctor/${doctorId}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.success && Array.isArray(result.data)) {
+            ALL_APPOINTMENTS = result.data;
+            // Después de cargar, aplicamos el filtro por defecto (Hoy)
+            filterAppointments('today'); 
+        } else {
+            console.error("Respuesta del servidor no válida:", result);
+            document.getElementById('appointments-list').innerHTML = '<div class="appointment-item cancelada details">Error al cargar la agenda. Formato de datos incorrecto.</div>';
+        }
+
+    } catch (error) {
+        console.error("Error al obtener citas:", error);
+        document.getElementById('appointments-list').innerHTML = '<div class="appointment-item cancelada details">Error de conexión con el servidor. Intente más tarde.</div>';
+    }
+}
+
+
+// --- FUNCIÓN 7: LÓGICA DE FILTRADO PRINCIPAL ---
+
+/**
+ * Filtra las citas basándose en el tipo de filtro o rango de fecha.
+ * @param {string} filterType - Tipo de filtro ('today', 'week', 'next7days') o fecha específica (YYYY-MM-DD).
+ */
+const filterAppointments = (filterType) => {
+    // Las estadísticas siempre se basan en el total de citas del doctor
+    updateStats(ALL_APPOINTMENTS); 
+
+    const range = getDateRange(filterType);
+    let filtered = [];
+    
+    // Lógica de filtrado: utiliza ALL_APPOINTMENTS obtenidas del servidor
+    if (range.isSingleDay) {
+        // Filtro por fecha específica
+        filtered = ALL_APPOINTMENTS.filter(cita => cita.fecha === range.targetDate);
+    } else {
+        // Filtro por rango de fechas
+        filtered = ALL_APPOINTMENTS.filter(cita => {
+            return cita.fecha >= range.start && cita.fecha < range.end;
+        });
+    }
+
+    renderAppointments(filtered);
+    
+    // Si es un filtro preestablecido, marcamos el botón activo
+    if (['today', 'week', 'next7days'].includes(filterType)) {
+        setActiveFilterButton(filterType);
+    }
+};
+
+
+// --- FUNCIÓN 8: MANEJO DEL INPUT DE FECHA ---
+
+/**
+ * Maneja el cambio del input de fecha específico.
+ * @param {string} dateString - Fecha seleccionada (YYYY-MM-DD).
+ */
+const filterByDate = (dateString) => {
+    if (dateString) {
+        // Establece el filtro en la fecha específica
+        filterAppointments(dateString); 
+        // Desactivar botones preestablecidos
+        document.querySelectorAll('.filter-button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+    }
+}
+
+
+// --- INICIALIZACIÓN ---
+
+// Exponemos las funciones al ámbito global (window) para que el HTML pueda llamarlas directamente
+window.filterAppointments = filterAppointments;
+window.filterByDate = filterByDate;
+
+
+
 
 // Variables globales para almacenar las listas completas (para el buscador)
 let listaPacientes = []; 
@@ -972,6 +1264,16 @@ const cargarHistorialCitas = async (estadoFiltro = 'todas') => {
     }
 };
 
+
+// --- FUNCIÓN 9: LLAMADA INICIAL DE CARGA ---
+
+window.onload = () => {
+    console.log("DEBUG: Página cargada. Iniciando carga de datos del doctor y citas.");
+    // 1. Cargar la información del doctor
+    fetchDoctorDetails();
+    // 2. Cargar las citas del doctor
+    fetchAllAppointments();
+};
 // -------------------------------------------------------------
 // INICIALIZACIÓN Y ASIGNACIÓN DE EVENTOS
 // -------------------------------------------------------------

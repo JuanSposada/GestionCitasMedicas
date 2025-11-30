@@ -155,19 +155,19 @@
   {
     "id": "C018",
     "pacienteId": "P008",
-    "doctorId": "D011",
+    "doctorId": "D001",
     "fecha": "2025-11-29",
-    "hora": "18:57",
+    "hora": "11:57",
     "motivo": "fiebre",
     "estado": "programada"
   },
   {
     "id": "C019",
     "pacienteId": "P003",
-    "doctorId": "D011",
+    "doctorId": "D001",
     "fecha": "2025-11-30",
     "hora": "09:31",
     "motivo": "chequeo general",
-    "estado": "programada"
+    "estado": "cancelada"
   }
 ]
