@@ -1,16 +1,14 @@
 [
   {
     "id": "D001",
-    "nombre": "Dr. Carlos Méndez",
+    "nombre": "Dr. Carlos Machado",
     "especialidad": "Cardiología",
     "horarioInicio": "09:00",
     "horarioFin": "17:00",
     "diasDisponibles": [
       "Lunes",
-      "Martes",
-      "Miércoles",
       "Jueves",
-      "Viernes"
+      "Domingo"
     ]
   },
   {

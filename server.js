@@ -26,7 +26,9 @@ const {leerDB,
     especialidadMasSolicitada,
     buscarCitasPorFechaYEstado,
     buscarDoctoresDisponibles,
-    citasProximas24Horas
+    citasProximas24Horas,
+    isDuplicatedDoctorForUpdate, 
+    actualizarDoctor
  } = require('./utils/fileManager');
 
 app.use(express.json())
@@ -177,6 +179,55 @@ app.get('/api/doctores/especialidad/:especialidad', (req, res) =>{
         data: doctores
     })
 })
+
+// app.js (Ruta PUT para actualizar Doctor)
+
+app.put('/api/doctores/:id', (req, res) => {
+    const doctorId = req.params.id; // ID viene de la URL (D001)
+    const { nombre, especialidad, horarioInicio, horarioFin, diasDisponibles } = req.body;
+    
+    // 1. Validación de campos obligatorios
+    if (!nombre || !especialidad || !horarioInicio || !horarioFin || !diasDisponibles) {
+        return res.status(400).json({
+            success: false,
+            message: 'Faltan datos obligatorios para la actualización.'
+        });
+    }
+
+    // 2. Validación de Unicidad (Chequear duplicados, excluyendo al doctor actual)
+    if (isDuplicatedDoctorForUpdate(doctorId, nombre, especialidad)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Ya existe otro doctor con el mismo nombre y especialidad.'
+        });
+    }
+
+    // 3. Validación de Horario (del backend)
+    if (horarioInicio >= horarioFin) {
+        return res.status(400).json({
+            success: false,
+            message: 'El horario de inicio debe ser menor al horario de fin.'
+        });
+    }
+
+    // 4. Ejecutar la actualización
+    const datosActualizados = { nombre, especialidad, horarioInicio, horarioFin, diasDisponibles };
+    const doctorActualizado = actualizarDoctor(doctorId, datosActualizados);
+
+    if (doctorActualizado) {
+        return res.status(200).json({
+            success: true,
+            message: `Doctor ID ${doctorId} actualizado.`,
+            data: doctorActualizado
+        });
+    } else {
+        // Si actualizarDoctor devuelve null (ID no encontrado)
+        return res.status(404).json({
+            success: false,
+            message: 'Doctor no encontrado.'
+        });
+    }
+});
 
 //////// Endpoints Citas /////////
 

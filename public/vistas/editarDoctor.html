@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Doctor - Gestión Médica</title>
+    <link rel="stylesheet" href="../css/style.css"> 
+</head>
+<body>
+
+    <header>
+        <h1 id="form-header-status">👨‍⚕️ Editar Doctor</h1>
+    </header>
+
+    <main>
+        <section class="form-container">
+            
+            <form id="edicionDoctorForm" style="display:none;"> 
+                
+                <input type="hidden" id="doctorId" name="doctorId">
+                
+                <div class="form-group">
+                    <label for="nombreDoctor">Nombre Completo:</label>
+                    <input type="text" id="nombreDoctor" name="nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="especialidad">Especialidad:</label>
+                    <select id="especialidad" name="especialidad" required>
+                        <option value="">Selecciona una especialidad</option>
+                        <option value="Cardiología">Cardiología</option>
+                        <option value="Dermatología">Dermatología</option>
+                        <option value="Pediatría">Pediatría</option>
+                        <option value="Neurología">Neurología</option>
+                        <option value="Odontología">Odontología</option>
+                        <option value="Medicina General">Medicina General</option>
+                    </select>
+                </div>
+
+                <div class="form-group horario-group">
+                    <label>Horario de Consulta:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="time" id="horarioInicio" name="horarioInicio" required>
+                        <span>a</span>
+                        <input type="time" id="horarioFin" name="horarioFin" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Días Disponibles:</label>
+                    <div class="checkbox-group" id="diasDisponibles">
+                        <label><input type="checkbox" name="diasDisponibles" value="Lunes"> Lunes</label>
+                        <label><input type="checkbox" name="diasDisponibles" value="Martes"> Martes</label>
+                        <label><input type="checkbox" name="diasDisponibles" value="Miércoles"> Miércoles</label>
+                        <label><input type="checkbox" name="diasDisponibles" value="Jueves"> Jueves</label>
+                        <label><input type="checkbox" name="diasDisponibles" value="Viernes"> Viernes</label>
+                        <label><input type="checkbox" name="diasDisponibles" value="Sábado"> Sábado</label>
+                        <label><input type="checkbox" name="diasDisponibles" value="Domingo"> Domingo</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit btn-edit">
+                    Guardar Cambios
+                </button>
+
+                <p id="mensaje-estado" class="mensaje-oculto"></p>
+            </form>
+
+            <div class="back-link">
+                <a href="/vistas/doctores.html">← Volver al Listado de Doctores</a>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="../js/main.js"></script>
+
+</body>
+</html>

@@ -301,6 +301,66 @@ const handleEditPaciente = async (e) => {
     }
 };
 
+
+// main.js - FUNCIÓN 1.7: MANEJO DE EDICIÓN DE DOCTORES (PUT)
+
+const handleEditDoctor = async (e) => {
+    e.preventDefault(); 
+    const form = e.target; 
+    const mensajeEstado = form.querySelector('#mensaje-estado');
+    
+    // 1. Limpieza inicial
+    mostrarMensaje('', 'oculto', form); 
+
+    const doctorId = document.getElementById('doctorId').value; 
+    
+    if (!doctorId) {
+        mostrarMensaje('ERROR FATAL: El ID del doctor no se cargó. No se puede actualizar.', 'error', form);
+        return;
+    }
+    
+    // 2. Validación de Días Disponibles (reutilizamos la función ya creada)
+    if (!validarDoctor(form)) {
+        return; // Detiene el envío si falla la validación de días
+    }
+    
+    // 3. Serialización de Datos
+    const nombre = document.getElementById('nombreDoctor').value;
+    const especialidad = document.getElementById('especialidad').value;
+    const horarioInicio = document.getElementById('horarioInicio').value;
+    const horarioFin = document.getElementById('horarioFin').value;
+
+    const checkboxes = form.querySelectorAll('input[name="diasDisponibles"]:checked');
+    const diasDisponibles = Array.from(checkboxes).map(cb => cb.value);
+
+    const datosAEnviar = { nombre, especialidad, horarioInicio, horarioFin, diasDisponibles };
+    const endpoint = `/api/doctores/${doctorId}`; 
+
+    // 4. Lógica de Fetch (PUT)
+    try {
+        const response = await fetch(endpoint, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datosAEnviar)
+        });
+
+        const resultado = await response.json();
+
+        if (response.ok) { 
+            mostrarMensaje(`¡Doctor ID ${doctorId} actualizado exitosamente!`, 'success', form);
+            // Opcional: Recargar la vista de doctores
+            // setTimeout(() => window.location.href = './doctores.html', 1500);
+            
+        } else { 
+            // Esto capturará los errores de unicidad (Nombre+Especialidad) y horario (Inicio < Fin)
+            mostrarMensaje(`Error al actualizar: ${resultado.message}`, 'error', form);
+        }
+
+    } catch (error) {
+        console.error('Error al editar el doctor:', error);
+        mostrarMensaje('Error de conexión con el servidor al intentar actualizar.', 'error', form);
+    }
+};
 // -------------------------------------------------------------
 // FUNCIÓN 2: CARGAR DATOS EN SELECTORES (GET)
 // -------------------------------------------------------------
@@ -761,7 +821,66 @@ const cargarDatosEdicionPaciente = async () => {
         if (headerStatus) headerStatus.textContent = 'Error de conexión con el servidor.';
     }
 };
+// main.js - FUNCIÓN 6.5: CARGAR DATOS DEL DOCTOR EN LA VISTA DE EDICIÓN (GET por ID)
 
+const cargarDatosEdicionDoctor = async () => {
+    const doctorId = obtenerParametroURL('id');
+    const form = document.getElementById('edicionDoctorForm');
+    const headerStatus = document.getElementById('form-header-status');
+    const mensajeEstado = document.getElementById('mensaje-estado');
+
+    if (form) form.style.display = 'none'; 
+    if (mensajeEstado) mensajeEstado.classList.add('mensaje-oculto');
+
+    if (!doctorId) {
+        console.error('ID de doctor no encontrado en la URL.');
+        if (headerStatus) headerStatus.textContent = 'Error: ID de doctor no proporcionado.';
+        return;
+    }
+
+    if (headerStatus) headerStatus.textContent = `Cargando datos para ID: ${doctorId}...`;
+    
+    try {
+        const endpoint = `/api/doctores/${doctorId}`;
+        const response = await fetch(endpoint);
+        const resultado = await response.json();
+
+        if (response.ok && resultado.success && resultado.data) {
+            const doctor = resultado.data;
+            
+            // 1. Rellenar campos simples
+            document.getElementById('doctorId').value = doctor.id; // Campo oculto
+            document.getElementById('nombreDoctor').value = doctor.nombre;
+            document.getElementById('especialidad').value = doctor.especialidad;
+            document.getElementById('horarioInicio').value = doctor.horarioInicio;
+            document.getElementById('horarioFin').value = doctor.horarioFin;
+            
+            // 2. Rellenar Checkboxes de Días Disponibles
+            if (Array.isArray(doctor.diasDisponibles)) {
+                const checkboxes = form.querySelectorAll('input[name="diasDisponibles"]');
+                checkboxes.forEach(cb => {
+                    // Marcar si el valor del checkbox está en el array de días disponibles
+                    if (doctor.diasDisponibles.includes(cb.value)) {
+                        cb.checked = true;
+                    } else {
+                        cb.checked = false; // Asegurar que los no incluidos estén desmarcados
+                    }
+                });
+            }
+
+            if (headerStatus) headerStatus.textContent = `Modifica los campos necesarios y guarda los cambios para ID: ${doctor.id}.`;
+            if (form) form.style.display = 'block'; 
+            
+        } else {
+            console.error(`Error al obtener doctor ID ${doctorId}:`, resultado.message);
+            if (headerStatus) headerStatus.textContent = `Error al cargar datos del doctor: ${resultado.message || 'Doctor no encontrado'}.`;
+        }
+
+    } catch (error) {
+        console.error('Error de conexión al cargar datos del doctor:', error);
+        if (headerStatus) headerStatus.textContent = 'Error de conexión con el servidor.';
+    }
+};
 // -------------------------------------------------------------
 // FUNCIÓN 7: CARGAR HISTORIAL DE CITAS DE UN PACIENTE (GET por ID y Citas)
 // -------------------------------------------------------------
@@ -866,6 +985,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // NUEVO: Asignar manejador de envío al formulario de edición (PUT)
     const formEdicionPaciente = document.getElementById('edicionPacienteForm');
+    const formEdicionDoctor = document.getElementById('edicionDoctorForm');
     
     // Asignar listeners de registro (POST)
     if (formPaciente) formPaciente.addEventListener('submit', handleSubmit);
@@ -873,6 +993,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Asignar listener de edición (PUT)
     if (formEdicionPaciente) formEdicionPaciente.addEventListener('submit', handleEditPaciente);
+    if (formEdicionDoctor) formEdicionDoctor.addEventListener('submit', handleEditDoctor);
     
     // Asignar listener para cerrar modal (si existe un botón de cierre)
     const closeModalBtn = document.getElementById('close-modal-btn');
@@ -950,5 +1071,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 cargarHistorialCitas(estado); // Recargar las citas con el nuevo filtro
             });
         }
+    }
+    if (formEdicionDoctor) {
+        console.log('LOG Carga: Ejecutando carga de datos para edición de doctor.');
+        cargarDatosEdicionDoctor();
     }
 });

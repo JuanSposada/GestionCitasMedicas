@@ -130,6 +130,31 @@ const isDuplicatedDoctor = (nombre, especialidad) => {
     return existing;
 }
 
+// backend/utils/db.js o donde manejes tu lista/array de doctores
+
+const actualizarDoctor = (id, nuevosDatos) => {
+    const db = leerDB(DOCTORES_FILE);
+    const index = db.findIndex(doc => doc.id === id);
+    
+    if (index === -1) {
+        return null; // Doctor no encontrado
+    }
+
+    // Aplicar solo los campos permitidos y mantener el ID original
+    db[index] = { ...db[index], ...nuevosDatos, id: id };
+    
+    escribirDB(DOCTORES_FILE, db);
+    return db[index];
+};
+
+const isDuplicatedDoctorForUpdate = (id, nombre, especialidad) => {
+    const db = leerDB(DOCTORES_FILE);
+    return db.some(doc => 
+        doc.id !== id && // Ignorar al doctor que estamos editando
+        doc.nombre.toLowerCase() === nombre.toLowerCase() && 
+        doc.especialidad.toLowerCase() === especialidad.toLowerCase()
+    );
+};
 /// Funciones de Citas ///////
 
 const agendarCita = (pacienteId, doctorId, fecha, hora, motivo, estado) =>{
@@ -301,5 +326,7 @@ module.exports = {
     especialidadMasSolicitada,
     buscarCitasPorFechaYEstado,
     buscarDoctoresDisponibles, 
-    citasProximas24Horas
+    citasProximas24Horas,
+    isDuplicatedDoctorForUpdate, 
+    actualizarDoctor
 };
