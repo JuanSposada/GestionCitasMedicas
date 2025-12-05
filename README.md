@@ -155,6 +155,10 @@ La aplicación se divide en un backend (`server.js`) y una carpeta pública (`pu
 ### Agendar Nueva Cita
 <img width="860" height="940" alt="image" src="https://github.com/user-attachments/assets/ea791dab-28ba-43b0-aaee-b64ad80f1ab3" />
 
+#### Aplicacion de Responsividad
+<img width="325" height="839" alt="image" src="https://github.com/user-attachments/assets/49a94ba5-b9b9-4919-a40d-27116d99b1c4" /> <img width="317" height="831" alt="image" src="https://github.com/user-attachments/assets/a6a5662b-bb07-407a-a163-e0e4fd22af0a" /><img width="320" height="829" alt="image" src="https://github.com/user-attachments/assets/ee9f2710-ffe7-4269-a8ce-6b0395007b57" />
+
+
 
 
 ---
