@@ -7,6 +7,7 @@
 - Estudiante: JUAN SEBASTIAN MORENO POSADA (22760047)  
 - Docente: Xenia Padilla  
 - Fecha: 2025-11-04
+<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/af2d476d-0757-46bc-83ec-fe9fb8925f39" />
 
 ---
 
