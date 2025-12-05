@@ -1,45 +1,214 @@
 # Portada institucional
 
 - Institución: Instituto Tecnologico de Ensenada
-- Carrera: Ingeniería de Sistemas  
+- Carrera: Ingeniería en Sistemas Computacionales
 - Materia: DESARROLLO WEB 1
-- Nombre de la actividad: Evaluación - API "Citas Médicas"  
+- Nombre de la actividad: Evaluación - "Sistema de Gestion Médica"  
 - Estudiante: JUAN SEBASTIAN MORENO POSADA (22760047)  
 - Docente: Xenia Padilla  
-- Fecha: 2025-11-08
+- Fecha: 2025-11-04
 
 ---
 
-# Descripción
-API REST para gestionar pacientes, doctores y citas médicas. Código principal en `server.js` y lógica de lectura/escritura en `utils/fileManager.js`. Los datos se almacenan en JSON en la carpeta `data/`: `data/pacientes.json`, `data/doctores.json`, `data/citas.json`.
+# 🏥 Sistema de Gestión Médica (SGM)
+
+## 🌟 Resumen del Proyecto
+
+Este es un sistema web diseñado para la administración eficiente de pacientes, doctores y citas en una clínica o consultorio. El proyecto se enfoca en proporcionar un **Dashboard** intuitivo y en la gestión de las entidades principales mediante vistas de lista y registro.
 
 ---
 
-# Requisitos e instalación
+## 🛠️ Tecnologías Utilizadas
 
-Requisitos:
-- Node.js (>=14)
-- npm
+| Categoría | Tecnología | Versión/Descripción |
+| :--- | :--- | :--- |
+| **Backend** | **Node.js** | Entorno de ejecución de JavaScript. |
+| **Framework** | **Express** | Framework rápido y minimalista para Node.js. |
+| **Frontend** | **HTML5, CSS3, JavaScript (Vainilla)** | Estándares web para la interfaz de usuario. |
+| **Persistencia**| **Archivos JSON** (simulando DB) | Utilizado para la persistencia de datos (pacientes, doctores, citas). |
 
-Instalación y ejecución:
-```bash
-# instalar dependencias
-npm install
+---
 
-# instalar dependencias
-npm install express
+## 🚀 Instalación y Ejecución
 
-# iniciar en modo producción
-npm run start
+Sigue estos pasos para levantar el proyecto en tu entorno local.
 
-# iniciar en modo desarrollo (con nodemon)
-npm run dev
+### 1. Requisitos
+
+Asegúrate de tener instalado **Node.js** (se recomienda la versión LTS) en tu sistema.
+
+### 2. Instalación de Dependencias
+
+1.  Clona este repositorio:
+    ```bash
+    git clone https://github.com/JuanSposada/GestionCitasMedicas.git
+    cd GestionCitasMedicas
+    ```
+2.  Instala los módulos necesarios (Express):
+    ```bash
+    npm install express
+    ```
+
+### 3. Ejecutar el Proyecto
+
+1.  Inicia el servidor Node.js (asumiendo que el archivo principal es `server.js`):
+    ```bash
+    node server.js
+    ```
+2.  Abre tu navegador web y navega a:
+    ```
+    http://localhost:3000
+    ```
+
+---
+
+## 🏗️ Estructura del Proyecto
+
+La aplicación se divide en un backend (`server.js`) y una carpeta pública (`public`) que contiene la lógica frontend y las vistas.
+
 ```
+/
 
-Archivos principales:
-- `server.js` — define endpoints y flujo.
-- `utils/fileManager.js` — operaciones de lectura/escritura y funciones de negocio.
-- `data/` — almacenamiento JSON.
+├── data/
+
+│   ├── pacientes.json      # Almacenamiento de datos de pacientes
+
+│   ├── doctores.json       # Almacenamiento de datos de doctores
+
+│   └── citas.json          # Almacenamiento de datos de citas
+
+├── public/
+
+│   ├── css/
+
+│   │   └── style.css       # Estilos generales del proyecto
+
+│   ├── js/
+
+|   |   ├── citas.js        # Sew creo solo para la logica de citas ya que main.js crecio demasiado.        
+
+│   │   └── main.js         # Lógica central del frontend (peticiones API, DOM)
+
+│   └── vistas/
+
+│       ├── agendaDoctor.html  
+
+│       ├── citas.html  
+
+│       ├── dashboard.html  # Panel de Control principal
+
+│       ├── doctores.html  
+
+│       ├── editarDoctor.html  
+
+│       ├── editarPaciente.html  
+
+│       ├── historialPaciente.html  
+
+│       ├── pacientes.html 
+
+│       ├── registrarCita.html
+
+│       ├── editarPaciente.html  
+
+│       ├── registrarDoctor.html
+
+│       ├── registrarPaciente.html 
+
+└── server.js               # Servidor principal (Express y rutas)
+
+└── fileManager.js          # Lógica para leer/escribir archivos JSON
+
+└── README.md
+```
+## 🖼️ Capturas de Pantalla
+
+
+### Dashboard Principal
+<img width="1281" height="862" alt="image" src="https://github.com/user-attachments/assets/01f928d4-a86e-4903-a8ed-4ebae87fb036" />
+
+### Vista de Gestión de Pacientes
+<img width="1310" height="930" alt="image" src="https://github.com/user-attachments/assets/dfd41737-d9c4-4c90-a3c9-d811884747f3" />
+
+### Historial Pacientes
+<img width="1215" height="825" alt="image" src="https://github.com/user-attachments/assets/21b4d8b8-236c-42ac-b864-fc76b311b9e2" />
+
+### Crear/Editar Paciente
+<img width="853" height="837" alt="image" src="https://github.com/user-attachments/assets/6c2e9ca0-685b-4a73-a629-ec7f9d92ac50" />
+
+### Vista de Gestión de Doctores
+<img width="1345" height="911" alt="image" src="https://github.com/user-attachments/assets/e67d79ee-1499-4d7c-8248-76421f5cbff8" />
+
+### Agenda Doctores
+<img width="1211" height="908" alt="image" src="https://github.com/user-attachments/assets/bf01fd37-3b82-4940-847e-be1e43a2b13f" />
+
+### Crear/editar Doctor
+<img width="1272" height="661" alt="image" src="https://github.com/user-attachments/assets/d95e25ca-56ad-40eb-a10e-cd5fc3584810" />
+
+### Vista de Gestión de Citas
+<img width="1243" height="927" alt="image" src="https://github.com/user-attachments/assets/70d890c4-1a23-44ba-ae25-cd449a81d4d2" />
+
+### Ver detalle de Cita
+<img width="586" height="855" alt="image" src="https://github.com/user-attachments/assets/0edcc544-ef28-4f7e-bb35-4760705728aa" />
+
+### Agendar Nueva Cita
+<img width="860" height="940" alt="image" src="https://github.com/user-attachments/assets/ea791dab-28ba-43b0-aaee-b64ad80f1ab3" />
+
+
+
+---
+
+## 🧠 Decisiones de Diseño Clave
+
+### 1. Arquitectura
+
+* **Decisión:** Se utilizó una arquitectura de **Cliente-Servidor tradicional** con renderizado del lado del cliente.
+* **Justificación:** Permite un desarrollo rápido sin la complejidad de frameworks de frontend (como React o Vue), manteniendo todo el control de las peticiones en JavaScript nativo (`main.js`).
+
+### 2. Persistencia de Datos
+
+* **Decisión:** Uso de **archivos JSON** (`data/*.json`) para simular la persistencia en lugar de una base de datos real (ej. MongoDB, SQL).
+* **Justificación:** Acelera la fase de prototipado y evita la configuración de una DB externa, enfocando el desarrollo en la lógica de negocio.
+
+### 3. Diseño de Interfaz (Dashboard)
+
+* **Decisión:** El *Home* se convirtió en un **Dashboard** (Panel de Control).
+* **Decisión:** Omision de Graficas para evitar implementar cambios en funcionalidad. 
+* **Decisión:** Se utilizo el mismo formsto para registrar/editar. 
+* **Decisión:** Se busco que la interfaz fuera sencilla e intuitiva.
+* **Decisión:** Se agrego responsabilidad para movil.
+
+---
+
+## 🗺️ Flujos de Usuario Principales
+
+| Flujo | Pasos de Usuario | Endpoints Utilizados |
+| :--- | :--- | :--- |
+| **Ver Resumen Diario**| 1. Navegar a `/vistas/dashboard.html` | `GET /api/dashboard/stats`, `GET /api/dashboard/citas-hoy`|
+| **Registro de Paciente**| 1. Rellenar formulario en `/vistas/registrarPaciente.html` | `POST /api/pacientes` |
+| **Gestión de Doctores**| 1. Navegar a `/vistas/doctores.html` | `GET /api/doctores`, `GET /api/doctores/:id` (para editar) |
+| **Registro de Doctor**| 1. Rellenar formulario en `/vistas/registrarDoctor.html` | `POST /api/doctores` |
+| **Consulta de citas programdas/canceladas**| 1. Navegar a `/vistas/citas.html` | `GET /api/citas` |
+| **Crear nueva cita**| 1. Navegar a `/vistas/citas.html` | `POST /api/citas` |
+| **Cancelar Cita**| 1. Navegar a `/vistas/citas.html` | `POST /api/citas/:id/cancelar` |
+| **Ver Agenda de Doctor**| 1. Navegar a `/vistas/doctores.html` | `GET /api/citas/doctor/:doctorId` |
+Y las operaciones basicas de CRUD para Doctores, Pacientes y Citas.
+
+---
+## 🐛 Problemas Encontrados y Soluciones Implementadas
+
+| Problema | Solución Implementada |
+| :--- | :--- |
+| **Datos Relacionados en el Dashboard**| **Solución:** Las rutas `GET /api/dashboard/*` se modificaron en `server.js` para **enriquecer los datos de citas**. Se consulta el `pacienteId` y `doctorId` para mostrar sus respectivos nombres en la tabla de citas de hoy. |
+| **Sincronización de Archivos JSON** | **Solución:** Se implementó una capa de **Gestión de Archivos** (`fileManager.js`) para manejar las operaciones de lectura y escritura de forma síncrona/asíncrona y evitar corrupción de datos al guardar simultáneamente. |
+| **Búsqueda en Listados** | **Solución:** Se implementó lógica en **`main.js`** (`doctores.html`) para realizar la búsqueda por nombre o ID directamente en el *frontend* (filtrando la lista cargada), mejorando la velocidad de respuesta. |
+| **Formatos de Fecha UTC y cambiarlos a UTC** | **Solución:** Se implementó lógica en **`main.js`** para poder manejar la fecha de PST manejar tanto las dias como las horas en comparacion a UTC  |
+
+
+---
+
+
+## 🌐 Endpoints Consumidos (API)
 
 ---
 
@@ -177,5 +346,7 @@ Para reproducir: usar curl o Postman contra `server.js`. Las funciones principal
 ---
 
 # Notas finales
-- Mantener validación tanto en capas de request (middleware) como en modelo/almacenamiento.  
-- Si se desea, puedo crear el archivo README.md directamente en el proyecto (indica si quieres que lo haga).  
+- El proyecto tiene muchas areas de oportunidad de mejora en cuanto a la UI/UX
+- Este proyecto nos ayudo a poner en practica los conceptos aprendidos a lo largo del curso.
+- Para futuras versiones se planea la integracion de componentes para generar una mejor experiencia de usuarios.
+
